@@ -47,7 +47,10 @@
    #include "proj2.h"
    #include "proj3.h" 
 /* #include "token.h" */
-#include <stdio.h> 
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+ 
 
 
 /*********************************data structures**********************/
@@ -78,7 +81,7 @@ int nesting = 0;	     /* nesting level counter */
 int attr_top = 0;	     /* attribute array counter */
 
 extern int yyline;
-extern char strg_tbl[];      /* string table in table.c */
+extern char * p;      /* string table in table.c */
 
 /************************ routines *****************************/
 
@@ -93,7 +96,7 @@ STInit()
 {
   int nStrInd, nSymInd;  /* string table index */
 
-  nStrInd = loc_str("system"); /* return string index of string "system" */
+  nStrInd = STMatch("system"); /* return string index of string "system" */
   if ( nStrInd != -1 )         /* "system" is stored in string table */
     {
       nSymInd = InsertEntry(nStrInd);
@@ -102,7 +105,7 @@ STInit()
       SetAttr(nSymInd, KIND_ATTR, CLASS);
     }
 
-  nStrInd = loc_str("readln");
+  nStrInd = STMatch("readln");
   if ( nStrInd != -1 )
     {
       nSymInd = InsertEntry(nStrInd);
@@ -112,7 +115,7 @@ STInit()
       SetAttr(nSymInd, KIND_ATTR, PROCE);
     }
 
-  nStrInd = loc_str("println");
+  nStrInd = STMatch("println");
   if ( nStrInd != -1 )
     {
       nSymInd = InsertEntry(nStrInd);

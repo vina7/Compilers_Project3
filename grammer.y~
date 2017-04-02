@@ -14,7 +14,7 @@ FieldDeclD
 
 /* Program */
 Program:
-	PROGRAMnum IDnum SEMInum ProgramB {$$ = MakeTree(ProgramOp, $4, MakeLeaf(STNode, InsertEntry($2)));  
+	PROGRAMnum IDnum SEMInum ProgramB {$$ = MakeTree(ProgramOp, $5, MakeLeaf(STNode, InsertEntry($3)));  
 	  STPrint(); printtree($$, 0);};
 ProgramB:
 	ClassDecl {$$ = MakeTree(ClassOp, MakeLeaf(DUMMYNode, 0), $1);} |

@@ -17,6 +17,7 @@ Aggelos Varvitsiotis.
 #include <stdlib.h>
 #include <string.h>
 #include "proj2.h"
+#include "proj3.h"
 ILTree dummy = { DUMMYNode, 0, 0, 0, 0 };
 
 /********************************************************
@@ -436,7 +437,7 @@ void printtree (nd, depth)
                     indx = IntVal(nd);
                     if (indx > 0)
                     {
-                      id = indx; /* GetAttr(indx, NAME_ATTR); */
+                      id = GetAttr(indx, NAME_ATTR);
                       fprintf (treelst,"[STNode,%d,\"%s\"]\n", IntVal(nd),
                                                     getname(id));
                     }

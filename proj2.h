@@ -79,6 +79,8 @@ tree MakeTree(int, tree, tree);
 tree RightChild(tree); */
 tree MkLeftC(tree, tree);
 tree MkRightC(tree, tree);
+char* getname(int i);
+char* getstring(int i);
 /*
 void SetNode(tree, tree);
 void SetNodeOp(tree, int);
