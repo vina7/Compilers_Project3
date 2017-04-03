@@ -372,10 +372,10 @@ GetAttr(st_ptr, attr_num)
   i = IsAttr(st_ptr, attr_num);
   if (!i)
   {
-/*
+
     printf("DEBUG--The wanted attribute number %d does not exist, id: %s\n", attr_num, getname(GetAttr(st_ptr, NAME_ATTR)));
-*/
-    printf("DEBUG--The wanted attribute number %d does not exist\n", attr_num);
+
+    //printf("DEBUG--The wanted attribute number %d does not exist\n", attr_num);
     return (0);
   }
 

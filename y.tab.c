@@ -467,6 +467,13 @@ static YYSTACKDATA yystack;
 #line 247 "grammer.y"
 tree GlobalType = NULL; 
 tree ReturnType = NULL;
+int counter=0;
+int counter2=0;
+int counter3 = 0;
+int idnumber = 0;
+int idnumber2 = 0;
+int counter4=0;
+int counter5=0;
 int yycolumn, yyline;
 FILE *treelst;
 main() { 
@@ -477,7 +484,7 @@ STInit();
 // Print out Errors
 yyerror(char *str) { printf("yyerror: %s at line %d\n", str, yyline); }
 #include "lex.yy.c"
-#line 479 "y.tab.c"
+#line 486 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -694,7 +701,7 @@ case 3:
 break;
 case 4:
 #line 25 "grammer.y"
-	{yyval.tptr = MakeTree(ClassDefOp, yystack.l_mark[0].tptr, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)));}
+	{if(LookUpHere(yystack.l_mark[-1].intg)!=0){error_msg(REDECLARATION,CONTINUE,yystack.l_mark[-1].intg,0);}yyval.tptr = MakeTree(ClassDefOp, yystack.l_mark[0].tptr, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)));}
 break;
 case 5:
 #line 29 "grammer.y"
@@ -714,11 +721,11 @@ case 8:
 break;
 case 9:
 #line 35 "grammer.y"
-	{ yyval.tptr = MakeTree(BodyOp, yystack.l_mark[-1].tptr, yystack.l_mark[0].tptr);}
+	{ yyval.tptr = MakeTree(BodyOp, yystack.l_mark[-1].tptr, yystack.l_mark[0].tptr); CloseBlock();}
 break;
 case 10:
 #line 36 "grammer.y"
-	{yyval.tptr = MakeTree(BodyOp, MakeLeaf(DUMMYNode,0), yystack.l_mark[0].tptr);}
+	{yyval.tptr = MakeTree(BodyOp, MakeLeaf(DUMMYNode,0), yystack.l_mark[0].tptr);CloseBlock();}
 break;
 case 11:
 #line 37 "grammer.y"
@@ -742,19 +749,19 @@ case 15:
 break;
 case 16:
 #line 49 "grammer.y"
-	{yyval.tptr = MakeTree(DeclOp, MakeLeaf(DUMMYNode, 0), MakeTree(CommaOp, yystack.l_mark[-1].tptr, MakeTree(CommaOp, yystack.l_mark[-2].tptr, MakeLeaf(DUMMYNode, 0))));}
+	{yyval.tptr = MakeTree(DeclOp, MakeLeaf(DUMMYNode, 0), MakeTree(CommaOp, yystack.l_mark[-1].tptr, MakeTree(CommaOp, yystack.l_mark[-2].tptr, MakeLeaf(DUMMYNode, 0)))); counter = 0;}
 break;
 case 17:
 #line 50 "grammer.y"
-	{yyval.tptr = MakeTree(DeclOp, MakeLeaf(DUMMYNode, 0), MakeTree(CommaOp, yystack.l_mark[-2].tptr, MakeTree(CommaOp, yystack.l_mark[-3].tptr, yystack.l_mark[-1].tptr)));}
+	{yyval.tptr = MakeTree(DeclOp, MakeLeaf(DUMMYNode, 0), MakeTree(CommaOp, yystack.l_mark[-2].tptr, MakeTree(CommaOp, yystack.l_mark[-3].tptr, yystack.l_mark[-1].tptr))); counter = 0;}
 break;
 case 18:
 #line 51 "grammer.y"
-	{yyval.tptr = MakeTree(DeclOp, yystack.l_mark[-3].tptr, MakeTree(CommaOp, yystack.l_mark[-1].tptr, MakeTree(CommaOp, GlobalType, MakeLeaf(DUMMYNode, 0))));}
+	{yyval.tptr = MakeTree(DeclOp, yystack.l_mark[-3].tptr, MakeTree(CommaOp, yystack.l_mark[-1].tptr, MakeTree(CommaOp, GlobalType, MakeLeaf(DUMMYNode, 0))));counter = 0;}
 break;
 case 19:
 #line 52 "grammer.y"
-	{yyval.tptr = MakeTree(DeclOp, yystack.l_mark[-4].tptr, MakeTree(CommaOp, yystack.l_mark[-2].tptr, MakeTree(CommaOp, GlobalType, yystack.l_mark[-1].tptr)));}
+	{yyval.tptr = MakeTree(DeclOp, yystack.l_mark[-4].tptr, MakeTree(CommaOp, yystack.l_mark[-2].tptr, MakeTree(CommaOp, GlobalType, yystack.l_mark[-1].tptr)));counter = 0;}
 break;
 case 20:
 #line 54 "grammer.y"
@@ -782,19 +789,19 @@ case 25:
 break;
 case 26:
 #line 65 "grammer.y"
-	{yyval.tptr = MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg));}
+	{ counter2=0; idnumber=yystack.l_mark[-1].intg; printf("%d ",idnumber); if(LookUpHere(yystack.l_mark[-1].intg)!=0){error_msg(REDECLARATION,CONTINUE,yystack.l_mark[-1].intg,0);} yyval.tptr = MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)); SetAttr(LookUp(yystack.l_mark[-1].intg),DIMEN_ATTR,counter);}
 break;
 case 27:
 #line 66 "grammer.y"
-	{yyval.tptr = MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg));}
+	{ idnumber=yystack.l_mark[0].intg; printf("%d ",idnumber); counter2=0;  if(LookUpHere(yystack.l_mark[0].intg)!=0){error_msg(REDECLARATION,CONTINUE,yystack.l_mark[0].intg,0);}yyval.tptr = MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)); SetAttr(LookUp(yystack.l_mark[0].intg),DIMEN_ATTR,counter);}
 break;
 case 28:
 #line 68 "grammer.y"
-	{}
+	{counter=1;}
 break;
 case 29:
 #line 69 "grammer.y"
-	{}
+	{counter=counter+1;}
 break;
 case 30:
 #line 73 "grammer.y"
@@ -826,55 +833,55 @@ case 36:
 break;
 case 37:
 #line 87 "grammer.y"
-	{yyval.tptr = MakeTree(ArrayTypeOp, yystack.l_mark[0].tptr, MakeLeaf(INTEGERTNode, 0));}
+	{printf("%d ",idnumber); if(GetAttr(LookUp(idnumber), DIMEN_ATTR)!=counter2){error_msg(INDX_MIS,CONTINUE, idnumber,0);}yyval.tptr = MakeTree(ArrayTypeOp, yystack.l_mark[0].tptr, MakeLeaf(INTEGERTNode, 0));}
 break;
 case 38:
 #line 89 "grammer.y"
-	{yyval.tptr = MakeTree(BoundOp, MakeLeaf(DUMMYNode, 0), yystack.l_mark[-1].tptr);}
+	{counter2 = 1; yyval.tptr = MakeTree(BoundOp, MakeLeaf(DUMMYNode, 0), yystack.l_mark[-1].tptr);}
 break;
 case 39:
 #line 90 "grammer.y"
-	{yyval.tptr = MakeTree(BoundOp, yystack.l_mark[-3].tptr, yystack.l_mark[-1].tptr);}
+	{counter2=counter2 +1; yyval.tptr = MakeTree(BoundOp, yystack.l_mark[-3].tptr, yystack.l_mark[-1].tptr);}
 break;
 case 40:
 #line 94 "grammer.y"
-	{ReturnType = yystack.l_mark[-4].tptr; yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode,InsertEntry(yystack.l_mark[-3].intg)), MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , ReturnType)), yystack.l_mark[0].tptr);}
+	{if(LookUpHere(yystack.l_mark[-3].intg)!=0){error_msg(REDECLARATION,CONTINUE,yystack.l_mark[-3].intg,0);} ReturnType = yystack.l_mark[-4].tptr; yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode,InsertEntry(yystack.l_mark[-3].intg)), MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , ReturnType)), yystack.l_mark[0].tptr); SetAttr(LookUp(yystack.l_mark[-3].intg),ARGNUM_ATTR,counter4); counter4=0; OpenBlock();}
 break;
 case 41:
 #line 95 "grammer.y"
-	{yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-3].intg)), MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , MakeLeaf(DUMMYNode, 0))), yystack.l_mark[0].tptr);}
+	{if(LookUpHere(yystack.l_mark[-3].intg)!=0){error_msg(REDECLARATION,CONTINUE,yystack.l_mark[-3].intg,0);}yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-3].intg)), MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , MakeLeaf(DUMMYNode, 0))), yystack.l_mark[0].tptr); SetAttr(LookUp(yystack.l_mark[-3].intg),ARGNUM_ATTR,counter4); counter4=0;OpenBlock();}
 break;
 case 42:
 #line 96 "grammer.y"
-	{ReturnType = yystack.l_mark[-5].tptr; yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-4].intg)), MakeTree(SpecOp, yystack.l_mark[-2].tptr, ReturnType)), yystack.l_mark[0].tptr);}
+	{if(LookUpHere(yystack.l_mark[-4].intg)!=0){error_msg(REDECLARATION,CONTINUE,yystack.l_mark[-4].intg,0);}ReturnType = yystack.l_mark[-5].tptr; yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-4].intg)), MakeTree(SpecOp, yystack.l_mark[-2].tptr, ReturnType)), yystack.l_mark[0].tptr); SetAttr(LookUp(yystack.l_mark[-4].intg),ARGNUM_ATTR,counter4); counter4=0;OpenBlock(); }
 break;
 case 43:
 #line 97 "grammer.y"
-	{yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-4].intg)), MakeTree(SpecOp, yystack.l_mark[-2].tptr, MakeLeaf(DUMMYNode, 0))), yystack.l_mark[0].tptr);}
+	{if(LookUpHere(yystack.l_mark[-4].intg)!=0){error_msg(REDECLARATION,CONTINUE,yystack.l_mark[-4].intg,0);} yyval.tptr = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-4].intg)), MakeTree(SpecOp, yystack.l_mark[-2].tptr, MakeLeaf(DUMMYNode, 0))), yystack.l_mark[0].tptr); SetAttr(LookUp(yystack.l_mark[-4].intg),ARGNUM_ATTR,counter4);counter4=0;OpenBlock();}
 break;
 case 44:
 #line 101 "grammer.y"
-	{yyval.tptr = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), MakeLeaf(INTEGERTNode, 0)), yystack.l_mark[0].tptr);}
+	{counter4=counter4 +1;yyval.tptr = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), MakeLeaf(INTEGERTNode, 0)), yystack.l_mark[0].tptr);SetAttr(LookUp(yystack.l_mark[-1].intg),DIMEN_ATTR,0);}
 break;
 case 45:
 #line 102 "grammer.y"
-	{yyval.tptr = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));}
+	{counter4=counter4+1; yyval.tptr = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0)); SetAttr(LookUp(yystack.l_mark[0].intg),DIMEN_ATTR,counter);}
 break;
 case 46:
 #line 103 "grammer.y"
-	{yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), MakeLeaf(INTEGERTNode, 0)), yystack.l_mark[0].tptr);}
+	{counter4=counter4+1; yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), MakeLeaf(INTEGERTNode, 0)), yystack.l_mark[0].tptr); SetAttr(LookUp(yystack.l_mark[-1].intg),DIMEN_ATTR,counter);}
 break;
 case 47:
 #line 104 "grammer.y"
-	{yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));}
+	{counter4=counter4+1;yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));SetAttr(LookUp(yystack.l_mark[0].intg),DIMEN_ATTR,counter);}
 break;
 case 48:
 #line 106 "grammer.y"
-	{yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));}
+	{counter4=counter4+1; yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));SetAttr(LookUp(yystack.l_mark[0].intg),DIMEN_ATTR,counter);}
 break;
 case 49:
 #line 107 "grammer.y"
-	{yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), MakeLeaf(INTEGERTNode, 0)), yystack.l_mark[0].tptr);}
+	{counter4=counter4+1; yyval.tptr = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), MakeLeaf(INTEGERTNode, 0)), yystack.l_mark[0].tptr); SetAttr(LookUp(yystack.l_mark[-1].intg),DIMEN_ATTR,counter);}
 break;
 case 50:
 #line 108 "grammer.y"
@@ -886,19 +893,19 @@ case 51:
 break;
 case 52:
 #line 113 "grammer.y"
-	{yyval.tptr = MakeTree(BodyOp, MakeLeaf(DUMMYNode, 0), yystack.l_mark[0].tptr);}
+	{yyval.tptr = MakeTree(BodyOp, MakeLeaf(DUMMYNode, 0), yystack.l_mark[0].tptr); }
 break;
 case 53:
 #line 117 "grammer.y"
-	{yyval.tptr = MakeTree(TypeIdOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), yystack.l_mark[0].tptr);}
+	{ yyval.tptr = MakeTree(TypeIdOp, MakeLeaf(IDNode, LookUp(yystack.l_mark[-1].intg)), yystack.l_mark[0].tptr);}
 break;
 case 54:
 #line 118 "grammer.y"
-	{yyval.tptr = MakeTree(TypeIdOp, MakeLeaf(INTEGERTNode, 0), yystack.l_mark[0].tptr);}
+	{ yyval.tptr = MakeTree(TypeIdOp, MakeLeaf(INTEGERTNode, 0), yystack.l_mark[0].tptr);}
 break;
 case 55:
 #line 119 "grammer.y"
-	{yyval.tptr = MakeTree(TypeIdOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[0].intg)), MakeLeaf(DUMMYNode, 0));}
+	{yyval.tptr = MakeTree(TypeIdOp, MakeLeaf(IDNode, LookUp(yystack.l_mark[0].intg)), MakeLeaf(DUMMYNode, 0));}
 break;
 case 56:
 #line 120 "grammer.y"
@@ -906,15 +913,15 @@ case 56:
 break;
 case 57:
 #line 122 "grammer.y"
-	{yyval.tptr = MakeTree(IndexOp, MakeLeaf(DUMMYNode, 0), MakeLeaf(DUMMYNode, 0));}
+	{ counter =1; yyval.tptr = MakeTree(IndexOp, MakeLeaf(DUMMYNode, 0), MakeLeaf(DUMMYNode, 0));}
 break;
 case 58:
 #line 123 "grammer.y"
-	{yyval.tptr = MakeTree(IndexOp, MakeLeaf(DUMMYNode, 0), yystack.l_mark[0].tptr);}
+	{counter= counter+1; yyval.tptr = MakeTree(IndexOp, MakeLeaf(DUMMYNode, 0), yystack.l_mark[0].tptr);}
 break;
 case 59:
 #line 124 "grammer.y"
-	{yyval.tptr = MakeTree(IndexOp, MakeLeaf(DUMMYNode, 0), MakeTree(FieldOp, yystack.l_mark[0].tptr, MakeLeaf(DUMMYNode, 0)));}
+	{counter =counter +1;yyval.tptr = MakeTree(IndexOp, MakeLeaf(DUMMYNode, 0), MakeTree(FieldOp, yystack.l_mark[0].tptr, MakeLeaf(DUMMYNode, 0)));}
 break;
 case 60:
 #line 131 "grammer.y"
@@ -978,19 +985,19 @@ case 74:
 break;
 case 75:
 #line 160 "grammer.y"
-	{yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-2].tptr,MakeLeaf(DUMMYNode,0)); }
+	{printf("%d ",idnumber2); if(GetAttr(LookUp(idnumber2),ARGNUM_ATTR)!=0){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-2].tptr,MakeLeaf(DUMMYNode,0)); }
 break;
 case 76:
 #line 161 "grammer.y"
-	{yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-3].tptr,yystack.l_mark[-1].tptr); }
+	{printf("%d ",idnumber2); if(GetAttr(LookUp(idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-3].tptr,yystack.l_mark[-1].tptr); counter5=0; }
 break;
 case 77:
 #line 163 "grammer.y"
-	{yyval.tptr = MakeTree(CommaOp, yystack.l_mark[0].tptr,MakeLeaf(DUMMYNode,0) );}
+	{counter5=1; yyval.tptr = MakeTree(CommaOp, yystack.l_mark[0].tptr,MakeLeaf(DUMMYNode,0) );}
 break;
 case 78:
 #line 164 "grammer.y"
-	{yyval.tptr = MakeTree(CommaOp,yystack.l_mark[-2].tptr,yystack.l_mark[0].tptr);}
+	{counter5=counter5+1; yyval.tptr = MakeTree(CommaOp,yystack.l_mark[-2].tptr,yystack.l_mark[0].tptr);}
 break;
 case 79:
 #line 168 "grammer.y"
@@ -1130,11 +1137,11 @@ case 113:
 break;
 case 114:
 #line 232 "grammer.y"
-	{yyval.tptr = MakeTree(VarOp, MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)), yystack.l_mark[0].tptr);}
+	{ if(IsAttr(LookUp(yystack.l_mark[-1].intg), DIMEN_ATTR)){if(GetAttr(LookUp(yystack.l_mark[-1].intg), DIMEN_ATTR)!=counter3){error_msg(INDX_MIS,CONTINUE, yystack.l_mark[-1].intg,0);} counter3=0;}yyval.tptr = MakeTree(VarOp, MakeLeaf(IDNode, LookUp(yystack.l_mark[-1].intg)), yystack.l_mark[0].tptr);}
 break;
 case 115:
 #line 234 "grammer.y"
-	{yyval.tptr=yystack.l_mark[0].tptr;}
+	{yyval.tptr=yystack.l_mark[0].tptr; }
 break;
 case 116:
 #line 235 "grammer.y"
@@ -1142,11 +1149,11 @@ case 116:
 break;
 case 117:
 #line 237 "grammer.y"
-	{yyval.tptr=MakeTree(SelectOp, yystack.l_mark[-2].tptr, yystack.l_mark[0].tptr);}
+	{counter3 =counter3+1; yyval.tptr=MakeTree(SelectOp, yystack.l_mark[-2].tptr, yystack.l_mark[0].tptr);}
 break;
 case 118:
 #line 238 "grammer.y"
-	{yyval.tptr= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(STNode, InsertEntry(yystack.l_mark[-1].intg)),MakeLeaf(DUMMYNode,0)), yystack.l_mark[0].tptr);}
+	{idnumber2=yystack.l_mark[-1].intg;yyval.tptr= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp(yystack.l_mark[-1].intg)),MakeLeaf(DUMMYNode,0)), yystack.l_mark[0].tptr); SetAttr(LookUp(yystack.l_mark[-1].intg),DIMEN_ATTR,0);}
 break;
 case 119:
 #line 240 "grammer.y"
@@ -1160,7 +1167,7 @@ case 121:
 #line 244 "grammer.y"
 	{}
 break;
-#line 1162 "y.tab.c"
+#line 1169 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;
