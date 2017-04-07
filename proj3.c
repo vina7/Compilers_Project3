@@ -269,10 +269,41 @@ LookUp(id)
       stack[i].used = true;
       return (stack[i].st_ptr);
     }
-
   /* id is undefined, push a dummy element onto stack */
   error_msg(UNDECLARATION, CONTINUE, id, 0);
   Push(false, id, 0, true);
+  return 0;
+}
+
+int
+LookUp2(classid,id)
+  int classid, id;
+{
+  int i;
+  int j;
+  for (i = st_top; i > 0; i--){
+    if (GetAttr(i,NAME_ATTR) == classid)
+    {
+      
+      int classnest=GetAttr(LookUp(classid),NEST_ATTR);
+      printf("shit\n");
+      for (j=i+1; j<st_top; j++ ){
+        
+        if(GetAttr(j,NEST_ATTR)>classnest){
+          
+          if(GetAttr(j,NAME_ATTR) == id){
+            return (st[j]);
+          }
+        } else {
+          break;
+        }
+      }      
+    }
+  }
+  
+  /* id is undefined, push a dummy element onto stack */
+  error_msg(UNDECLARATION, CONTINUE, id, 0);
+  //Push(false, id, 0, true);
   return 0;
 }
 
@@ -365,7 +396,6 @@ IsAttr(st_ptr, attr_num)
 int
 GetAttr(st_ptr, attr_num)
   int st_ptr, attr_num;
-
 {
   int i;
 

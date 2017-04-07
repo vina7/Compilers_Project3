@@ -7,7 +7,7 @@
 %token <intg> ANDnum ASSGNnum DECLARATIONSnum DOTnum ENDDECLARATIONSnum EQUALnum GTnum IDnum INTnum LBRACnum LPARENnum METHODnum NEnum ORnum PROGRAMnum RBRACnum RPARENnum SEMInum VALnum WHILEnum CLASSnum COMMAnum DIVIDEnum ELSEnum EQnum GEnum ICONSTnum IFnum LBRACEnum LEnum LTnum MINUSnum NOTnum PLUSnum RBRACEnum RETURNnum SCONSTnum TIMESnum VOIDnum ERRORnum STRERRORnum COMMERRORnum IDERRORnum BACKSLASHnum EOFnum			
 %type <tptr> Variable Expre MethodCallStatement Expression AssignmentStatement SimpleExpression WhileStatement IfStatement Statements_Op4 Statements_Op3  ReturnStatement Statementsop Statement StatementList AssignmentStatement Statements_Op MethodCallStatement Statements_Op2 IFState_Op Term Simple_op Simple_op2 UnsignedConstant Term_op Factor Factor_op Variable Variable_op2 Variable_op3 Variable_op ClassBodyC FieldDeclC FieldDeclE
 Program ProgramB ClassDecl ClassBody ClassBodyB Decls DeclsB FieldDecl VariableDeclId VariableDeclIdB VariableInitializer ArrayCreationExpression ArrayCreationExpressionB MethodDecl FormalParameterList FormalParameterListC Block Type TypeB ArrayInitializer ArrayInitializerB epsilon 
-FieldDeclD
+FieldDeclD MethodHelp ClassName Variableid
 %% /* yacc specification */
 
 // First Half of Grammar - Ryan //
@@ -22,8 +22,9 @@ ProgramB:
 
 /* Class Declarations */
 ClassDecl:
-	CLASSnum IDnum ClassBody {if(LookUpHere($2)!=0){error_msg(REDECLARATION,CONTINUE,$2,0);}$$ = MakeTree(ClassDefOp, $3, MakeLeaf(STNode, InsertEntry($2)));};
-	
+	CLASSnum ClassName ClassBody {$$ = MakeTree(ClassDefOp, $3,$2); CloseBlock();};
+ClassName:
+	IDnum {if(LookUpHere($1)!=0){error_msg(REDECLARATION,CONTINUE,$1,0);} $$=MakeLeaf(STNode, InsertEntry($1)); SetAttr(LookUpHere($1), KIND_ATTR, CLASS); OpenBlock();};
 /* ClassBody */
 ClassBody:
     LBRACEnum ClassBodyB RBRACEnum {$$ = $2;} |
@@ -32,8 +33,8 @@ ClassBody:
 ClassBodyB:
     Decls {$$ = $1;};
 ClassBodyC:
-    ClassBodyC MethodDecl  { $$ = MakeTree(BodyOp, $1, $2); CloseBlock();} |
-    MethodDecl {$$ = MakeTree(BodyOp, MakeLeaf(DUMMYNode,0), $1);CloseBlock();} | 
+    ClassBodyC MethodDecl  { $$ = MakeTree(BodyOp, $1, $2); } |
+    MethodDecl {$$ = MakeTree(BodyOp, MakeLeaf(DUMMYNode,0), $1);} | 
 	ClassBodyB {$$=$1;};
 	
 /* Declarations */
@@ -91,20 +92,22 @@ ArrayCreationExpressionB:
 
 /* Method Declaration */
 MethodDecl:
-	METHODnum Type IDnum LPARENnum RPARENnum Block {if(LookUpHere($3)!=0){error_msg(REDECLARATION,CONTINUE,$3,0);} ReturnType = $2; $$ = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode,InsertEntry($3)), MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , ReturnType)), $6); SetAttr(LookUp($3),ARGNUM_ATTR,counter4); counter4=0; OpenBlock();} |
-	METHODnum VOIDnum IDnum LPARENnum RPARENnum Block {if(LookUpHere($3)!=0){error_msg(REDECLARATION,CONTINUE,$3,0);}$$ = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry($3)), MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , MakeLeaf(DUMMYNode, 0))), $6); SetAttr(LookUp($3),ARGNUM_ATTR,counter4); counter4=0;OpenBlock();} |
-	METHODnum Type IDnum LPARENnum FormalParameterList RPARENnum Block {if(LookUpHere($3)!=0){error_msg(REDECLARATION,CONTINUE,$3,0);}ReturnType = $2; $$ = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry($3)), MakeTree(SpecOp, $5, ReturnType)), $7); SetAttr(LookUp($3),ARGNUM_ATTR,counter4); counter4=0;OpenBlock(); } |
-	METHODnum VOIDnum IDnum LPARENnum FormalParameterList RPARENnum Block {if(LookUpHere($3)!=0){error_msg(REDECLARATION,CONTINUE,$3,0);} $$ = MakeTree(MethodOp, MakeTree(HeadOp, MakeLeaf(STNode, InsertEntry($3)), MakeTree(SpecOp, $5, MakeLeaf(DUMMYNode, 0))), $7); SetAttr(LookUp($3),ARGNUM_ATTR,counter4);counter4=0;OpenBlock();};
-	
+	METHODnum Type MethodHelp LPARENnum RPARENnum Block { SetAttr(LookUp(idnumber3), KIND_ATTR, FUNC); ReturnType = $2; $$ = MakeTree(MethodOp, MakeTree(HeadOp, $3, MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , ReturnType)), $6); CloseBlock(); } |
+	METHODnum VOIDnum MethodHelp LPARENnum RPARENnum Block { SetAttr(LookUp(idnumber3), KIND_ATTR, PROCE); $$ = MakeTree(MethodOp, MakeTree(HeadOp, $3, MakeTree(SpecOp,MakeLeaf(DUMMYNode, 0) , MakeLeaf(DUMMYNode, 0))), $6); CloseBlock(); } |
+	METHODnum Type MethodHelp LPARENnum FormalParameterList RPARENnum Block { SetAttr(LookUp(idnumber3), KIND_ATTR, FUNC); ReturnType = $2; $$ = MakeTree(MethodOp, MakeTree(HeadOp, $3, MakeTree(SpecOp, $5, ReturnType)), $7); CloseBlock();} |
+	METHODnum VOIDnum MethodHelp LPARENnum FormalParameterList RPARENnum Block { SetAttr(LookUp(idnumber3), KIND_ATTR, PROCE); $$ = MakeTree(MethodOp, MakeTree(HeadOp, $3, MakeTree(SpecOp, $5, MakeLeaf(DUMMYNode, 0))), $7); CloseBlock();};
+MethodHelp:
+	IDnum {idnumber3 = $1;  if(LookUpHere($1)!=0){error_msg(REDECLARATION,CONTINUE,$1,0);} $$=MakeLeaf(STNode,InsertEntry($1)); SetAttr(LookUp($1),ARGNUM_ATTR,counter4);  counter4=0; OpenBlock();};
+
 /* FormalParameterList */
 FormalParameterList:
-	VALnum INTnum IDnum FormalParameterListC {counter4=counter4 +1;$$ = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($3)), MakeLeaf(INTEGERTNode, 0)), $4);SetAttr(LookUp($3),DIMEN_ATTR,0);}|
-	VALnum INTnum IDnum {counter4=counter4+1; $$ = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($3)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0)); SetAttr(LookUp($3),DIMEN_ATTR,counter);} |
-	INTnum IDnum FormalParameterListC {counter4=counter4+1; $$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), $3); SetAttr(LookUp($2),DIMEN_ATTR,counter);} |
-	INTnum IDnum {counter4=counter4+1;$$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));SetAttr(LookUp($2),DIMEN_ATTR,counter);};
+	VALnum INTnum IDnum FormalParameterListC { printf("%d\n",$3); counter4=counter4 +1;$$ = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($3)), MakeLeaf(INTEGERTNode, 0)), $4);SetAttr(LookUp($3),DIMEN_ATTR,0);}|
+	VALnum INTnum IDnum { printf("%d\n",$3);counter4=counter4+1; $$ = MakeTree(VArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($3)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0)); SetAttr(LookUp($3),DIMEN_ATTR,counter);} |
+	INTnum IDnum FormalParameterListC {printf("%d\n",$2); counter4=counter4+1; $$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), $3); SetAttr(LookUp($2),DIMEN_ATTR,counter);} |
+	INTnum IDnum {printf("%d\n",$2); counter4=counter4+1;$$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));SetAttr(LookUp($2),DIMEN_ATTR,counter);};
 FormalParameterListC:
-	COMMAnum IDnum {counter4=counter4+1; $$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));SetAttr(LookUp($2),DIMEN_ATTR,counter);} |
-	COMMAnum IDnum FormalParameterListC {counter4=counter4+1; $$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), $3); SetAttr(LookUp($2),DIMEN_ATTR,counter);} |
+	COMMAnum IDnum {printf("%d\n",$2); counter4=counter4+1; $$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), MakeLeaf(DUMMYNode, 0));SetAttr(LookUp($2),DIMEN_ATTR,counter);} |
+	COMMAnum IDnum FormalParameterListC {printf("%d\n",$2); counter4=counter4+1; $$ = MakeTree(RArgTypeOp, MakeTree(CommaOp, MakeLeaf(STNode, InsertEntry($2)), MakeLeaf(INTEGERTNode, 0)), $3); SetAttr(LookUp($2),DIMEN_ATTR,counter);} |
 	SEMInum FormalParameterList {$$ = $2;};
 
 /* Block */
@@ -157,8 +160,8 @@ AssignmentStatement:
 	
 /*MethodCallStatement*/
 MethodCallStatement: 
-	Variable LPARENnum RPARENnum {printf("%d ",idnumber2); if(GetAttr(LookUp(idnumber2),ARGNUM_ATTR)!=0){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} $$ = MakeTree(RoutineCallOp,$1,MakeLeaf(DUMMYNode,0)); } | 
-	Variable LPARENnum Expre RPARENnum {printf("%d ",idnumber2); if(GetAttr(LookUp(idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} $$ = MakeTree(RoutineCallOp,$1,$3); counter5=0; };
+	Variable LPARENnum RPARENnum {printf("%d ",idnumber2); if(GetAttr(LookUp2(idnumber4,idnumber2),ARGNUM_ATTR)!=0){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} $$ = MakeTree(RoutineCallOp,$1,MakeLeaf(DUMMYNode,0)); } | 
+	Variable LPARENnum Expre RPARENnum {printf("%d ",idnumber2); if(GetAttr(LookUp2(idnumber4, idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} $$ = MakeTree(RoutineCallOp,$1,$3); counter5=0; };
 Expre: 
 	Expression {counter5=1; $$ = MakeTree(CommaOp, $1,MakeLeaf(DUMMYNode,0) );}|  
 	Expression COMMAnum Expre {counter5=counter5+1; $$ = MakeTree(CommaOp,$1,$3);}; 
@@ -229,13 +232,15 @@ UnsignedConstant:
 	
 /*Variable rule*/
 Variable : 
-	IDnum Variable_op { if(IsAttr(LookUp($1), DIMEN_ATTR)){if(GetAttr(LookUp($1), DIMEN_ATTR)!=counter3){error_msg(INDX_MIS,CONTINUE, $1,0);} counter3=0;}$$ = MakeTree(VarOp, MakeLeaf(IDNode, LookUp($1)), $2);};
+	Variableid Variable_op {if(IsAttr(LookUp(idnumber4), DIMEN_ATTR)){if(GetAttr(LookUp(idnumber4), DIMEN_ATTR)!=counter3){error_msg(INDX_MIS,CONTINUE, idnumber4,0);} counter3=0;} $$ = MakeTree(VarOp, $1, $2);};
+Variableid:
+	IDnum {idnumber4= $1; $$ = MakeLeaf(IDNode, LookUp($1));};
 Variable_op: 
 	Variable_op2 {$$=$1; } | 
 	epsilon {$$ = MakeLeaf(DUMMYNode,0);};
 Variable_op2 : 
 	LBRACnum Variable_op3 RBRACnum Variable_op {counter3 =counter3+1; $$=MakeTree(SelectOp, $2, $4);} | 
-	DOTnum IDnum Variable_op {idnumber2=$2;$$= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp($2)),MakeLeaf(DUMMYNode,0)), $3); SetAttr(LookUp($2),DIMEN_ATTR,0);};
+	DOTnum IDnum Variable_op {idnumber2=$2; LookUp(idnumber4); $$= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp2(idnumber4,$2)),MakeLeaf(DUMMYNode,0)), $3); SetAttr(LookUp2(idnumber4,$2),DIMEN_ATTR,0);};
 Variable_op3 : 
 	Expression {$$ = MakeTree(IndexOp, $1,MakeLeaf(DUMMYNode,0) );} | 
 	Expression COMMAnum Expression {$$ = MakeTree(IndexOp,$1 ,MakeTree(IndexOp, $3,MakeLeaf(DUMMYNode,0)));} ;
@@ -251,6 +256,8 @@ int counter2=0;
 int counter3 = 0;
 int idnumber = 0;
 int idnumber2 = 0;
+int idnumber3=0;
+int idnumber4=0;
 int counter4=0;
 int counter5=0;
 int yycolumn, yyline;
