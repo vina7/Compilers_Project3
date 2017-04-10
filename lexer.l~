@@ -1,6 +1,7 @@
 %{
 #include <stdlib.h>
 #include "y.tab.h"
+#include "stringsmethods.h"
 extern int yycolumn, yylength, yyline, sizeST, indexST;
 extern char* p;
 %}
@@ -58,6 +59,8 @@ not			"!"
 times			"*"
 divide			"/"
 
+
+
 %%	
 {commentLine}	{}
 {comment}		{
@@ -76,7 +79,7 @@ divide			"/"
 {whileloop}		{yycolumn+=yyleng; return(WHILEnum);}
 {semi}			{yycolumn++; return(SEMInum);}
 {method}		{yycolumn+=yyleng; return(METHODnum);}
-{program}		{yycolumn+=yyleng; STadd("system", strlen("system")); STadd("println", strlen("println")); STadd("readln", strlen("readln")); return(PROGRAMnum);}
+{program}		{yycolumn+=yyleng; return(PROGRAMnum);}
 {and}			{yycolumn+=2; return(ANDnum);}
 {assign}		{yycolumn+=2; return(ASSGNnum);}
 {declaration}	{yycolumn+=yyleng; return(DECLARATIONSnum);}
@@ -148,6 +151,7 @@ int yycolumn = 0;
 int sizeST = 25;
 int indexST = 0;
 char* p; // reference variable to string
+
 
 /* :IGNORE ME:
  * Notes about some C functions:
@@ -253,6 +257,9 @@ int comCount(char* comment, int length){
 */
 int STMatch(char* value){
 	int k;
+	for(k = 0; value[k]; k++){
+		value[k] = tolower(value[k]);
+	}
 	int i = 0;
 	int match = -1;
 	char* end;
@@ -313,7 +320,7 @@ int STMatch(char* value){
 			*(currentSearch+j) = *(p+i+strin+j);
 		}
 		//the result is the result of comparing currentSearch to the value
-		int result = strcasecmp(currentSearch, value);
+		int result = strcmp(currentSearch, value);
 		//if they match, then i (the index of the starting character) is the location of our string within our ST
 		if(result == 0){
 			match = i + strin;
@@ -360,18 +367,19 @@ char* expand( char* point ) {
 */
 int STadd(char* string, int length){
 	int k;
-     
+	//Implementation of case insensitivity
+	for(k = 0; string[k]; k++){
+		string[k] = tolower(string[k]);
+	}
 	//If the string table is not big enough to add the next string, double it
 	if(((sizeST - indexST) < (length+1)) || (sizeST == 25)){
 		p = expand(p);
 	}
-
 	int i;
 	//Adding the new string to its own index
 	for(i = 0;i < length; i++){
 		*(p + indexST + i) = *(string + i);
 	}
-
 	*(p+indexST+i) = ' ';
 	int result = indexST;
 	indexST += length + 1;

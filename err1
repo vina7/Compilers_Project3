@@ -13,9 +13,10 @@ class myTest
 	method int func(int m, n)
 	declarations
 	int m;
+    int z;
 	enddeclarations
 	{
-	String z="Dfdsfsd";
+	 System.Println('dsfdsfs');
 	/* nothing */	
 	}
 }

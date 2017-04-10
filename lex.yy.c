@@ -575,11 +575,10 @@ char *yytext;
 #line 2 "lexer.l"
 #include <stdlib.h>
 #include "y.tab.h"
-
 extern int yycolumn, yylength, yyline, sizeST, indexST;
 extern char* p;
 /* regular definitions */
-#line 583 "lex.yy.c"
+#line 582 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -766,9 +765,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 64 "lexer.l"
+#line 61 "lexer.l"
 
-#line 772 "lex.yy.c"
+#line 771 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -853,13 +852,13 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 65 "lexer.l"
+#line 62 "lexer.l"
 {}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 66 "lexer.l"
+#line 63 "lexer.l"
 {
 					//printf("comment: %s\n", yytext);
 					yyline += comCount(yytext, yyleng);
@@ -868,107 +867,107 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 67 "lexer.l"
 {yycolumn+=yyleng;return(COMMERRORnum);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 71 "lexer.l"
+#line 68 "lexer.l"
 {yycolumn+=yyleng; return(VALnum);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 72 "lexer.l"
+#line 69 "lexer.l"
 {yycolumn+=yyleng; return(RETURNnum);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "lexer.l"
+#line 70 "lexer.l"
 {yycolumn+=yyleng; return(CLASSnum);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 74 "lexer.l"
+#line 71 "lexer.l"
 {yycolumn+=1; return(COMMAnum);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 75 "lexer.l"
+#line 72 "lexer.l"
 {yycolumn+=3; return(INTnum);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 76 "lexer.l"
+#line 73 "lexer.l"
 {yycolumn+=yyleng; return(ELSEnum);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 77 "lexer.l"
+#line 74 "lexer.l"
 {yycolumn+=2; return(IFnum);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 78 "lexer.l"
+#line 75 "lexer.l"
 {yycolumn+=yyleng; return(VOIDnum);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 79 "lexer.l"
+#line 76 "lexer.l"
 {yycolumn+=yyleng; return(WHILEnum);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 80 "lexer.l"
+#line 77 "lexer.l"
 {yycolumn++; return(SEMInum);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 81 "lexer.l"
+#line 78 "lexer.l"
 {yycolumn+=yyleng; return(METHODnum);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 82 "lexer.l"
-{yycolumn+=yyleng; return(PROGRAMnum);}
+#line 79 "lexer.l"
+{yycolumn+=yyleng; STadd("system", strlen("system")); STadd("println", strlen("println")); STadd("readln", strlen("readln")); return(PROGRAMnum);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 83 "lexer.l"
+#line 80 "lexer.l"
 {yycolumn+=2; return(ANDnum);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 84 "lexer.l"
+#line 81 "lexer.l"
 {yycolumn+=2; return(ASSGNnum);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 85 "lexer.l"
+#line 82 "lexer.l"
 {yycolumn+=yyleng; return(DECLARATIONSnum);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 86 "lexer.l"
+#line 83 "lexer.l"
 {yycolumn+=yyleng; return(ENDDECLARATIONSnum);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 87 "lexer.l"
+#line 84 "lexer.l"
 {yycolumn++; return(DOTnum);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 88 "lexer.l"
+#line 85 "lexer.l"
 {yycolumn++; return(EQUALnum);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 89 "lexer.l"
+#line 86 "lexer.l"
 {yycolumn++; return(GTnum);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 90 "lexer.l"
+#line 87 "lexer.l"
 {
 					yycolumn+=yyleng;
 					yylval.intg = atoi(yytext);
@@ -977,7 +976,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 95 "lexer.l"
+#line 92 "lexer.l"
 {
 					int result = STMatch(yytext);
 					if(result == -1){
@@ -993,92 +992,92 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 107 "lexer.l"
+#line 104 "lexer.l"
 {yycolumn+=yyleng; return(IDERRORnum);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 108 "lexer.l"
+#line 105 "lexer.l"
 {yycolumn++; return(LBRACnum);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 109 "lexer.l"
+#line 106 "lexer.l"
 {yycolumn++; return(LPARENnum);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 110 "lexer.l"
+#line 107 "lexer.l"
 {yycolumn+=2; return(NEnum);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 111 "lexer.l"
+#line 108 "lexer.l"
 {yycolumn+=2; return(ORnum);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 112 "lexer.l"
+#line 109 "lexer.l"
 {yycolumn++; return(RBRACnum);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 113 "lexer.l"
+#line 110 "lexer.l"
 {yycolumn++; return(RPARENnum);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 114 "lexer.l"
+#line 111 "lexer.l"
 {yycolumn+=1; return(DIVIDEnum);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 115 "lexer.l"
+#line 112 "lexer.l"
 {yycolumn+=2; return(EQnum);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 116 "lexer.l"
+#line 113 "lexer.l"
 {yycolumn+=2; return(GEnum);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 117 "lexer.l"
+#line 114 "lexer.l"
 {yycolumn++; return(LBRACEnum);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 118 "lexer.l"
+#line 115 "lexer.l"
 {yycolumn+=2; return(LEnum);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 119 "lexer.l"
+#line 116 "lexer.l"
 {yycolumn++; return(LTnum);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 120 "lexer.l"
+#line 117 "lexer.l"
 {yycolumn++; return(MINUSnum);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 121 "lexer.l"
+#line 118 "lexer.l"
 {yycolumn++; return(NOTnum);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 122 "lexer.l"
+#line 119 "lexer.l"
 {yycolumn++; return(PLUSnum);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 123 "lexer.l"
+#line 120 "lexer.l"
 {yycolumn++; return(RBRACEnum);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 124 "lexer.l"
+#line 121 "lexer.l"
 {	
 					int result = STMatch(yytext);
 					if(result == -1){
@@ -1097,36 +1096,36 @@ YY_RULE_SETUP
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 138 "lexer.l"
+#line 135 "lexer.l"
 {yycolumn+=yyleng; yyline++; return(STRERRORnum);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 139 "lexer.l"
+#line 136 "lexer.l"
 {yycolumn++; return(TIMESnum);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 140 "lexer.l"
+#line 137 "lexer.l"
 {yycolumn+=yyleng;}
 	YY_BREAK
 case 46:
 /* rule 46 can match eol */
 YY_RULE_SETUP
-#line 141 "lexer.l"
+#line 138 "lexer.l"
 {yyline++; yycolumn=0;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 142 "lexer.l"
+#line 139 "lexer.l"
 {return(BACKSLASHnum);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 144 "lexer.l"
+#line 141 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1130 "lex.yy.c"
+#line 1129 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2124,7 +2123,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 144 "lexer.l"
+#line 141 "lexer.l"
 
 
 /* user subroutines */
@@ -2136,7 +2135,6 @@ int yycolumn = 0;
 int sizeST = 25;
 int indexST = 0;
 char* p; // reference variable to string
-
 
 /* :IGNORE ME:
  * Notes about some C functions:
@@ -2242,9 +2240,6 @@ int comCount(char* comment, int length){
 */
 int STMatch(char* value){
 	int k;
-	for(k = 0; value[k]; k++){
-		value[k] = tolower(value[k]);
-	}
 	int i = 0;
 	int match = -1;
 	char* end;
@@ -2305,7 +2300,7 @@ int STMatch(char* value){
 			*(currentSearch+j) = *(p+i+strin+j);
 		}
 		//the result is the result of comparing currentSearch to the value
-		int result = strcmp(currentSearch, value);
+		int result = strcasecmp(currentSearch, value);
 		//if they match, then i (the index of the starting character) is the location of our string within our ST
 		if(result == 0){
 			match = i + strin;
@@ -2352,19 +2347,18 @@ char* expand( char* point ) {
 */
 int STadd(char* string, int length){
 	int k;
-	//Implementation of case insensitivity
-	for(k = 0; string[k]; k++){
-		string[k] = tolower(string[k]);
-	}
+     
 	//If the string table is not big enough to add the next string, double it
 	if(((sizeST - indexST) < (length+1)) || (sizeST == 25)){
 		p = expand(p);
 	}
+
 	int i;
 	//Adding the new string to its own index
 	for(i = 0;i < length; i++){
 		*(p + indexST + i) = *(string + i);
 	}
+
 	*(p+indexST+i) = ' ';
 	int result = indexST;
 	indexST += length + 1;

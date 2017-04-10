@@ -45,7 +45,7 @@
  */
 
    #include "proj2.h"
-   #include "proj3.h" 
+   #include "proj3.h"
 /* #include "token.h" */
 #include <stdlib.h>
 #include <string.h>
@@ -81,7 +81,7 @@ int nesting = 0;	     /* nesting level counter */
 int attr_top = 0;	     /* attribute array counter */
 
 extern int yyline;
-extern char * p;      /* string table in table.c */
+//extern char * p;      /* string table in table.c */
 
 /************************ routines *****************************/
 
@@ -94,9 +94,10 @@ extern char * p;      /* string table in table.c */
 void
 STInit()
 {
-  int nStrInd, nSymInd;  /* string table index */
+  int nStrInd, nSymInd;  /* string table index */  
 
   nStrInd = STMatch("system"); /* return string index of string "system" */
+
   if ( nStrInd != -1 )         /* "system" is stored in string table */
     {
       nSymInd = InsertEntry(nStrInd);
@@ -113,9 +114,11 @@ STInit()
       /* SetAttr(nSymInd, TREE_ATTR, NULL); */
       SetAttr(nSymInd, PREDE_ATTR, true);
       SetAttr(nSymInd, KIND_ATTR, PROCE);
+      SetAttr(nSymInd, ARGNUM_ATTR, 0);
     }
 
   nStrInd = STMatch("println");
+
   if ( nStrInd != -1 )
     {
       nSymInd = InsertEntry(nStrInd);
@@ -123,7 +126,9 @@ STInit()
       /* SetAttr(nSymInd, TREE_ATTR, NULL); */
       SetAttr(nSymInd, PREDE_ATTR, true);
       SetAttr(nSymInd, KIND_ATTR, PROCE);
+      SetAttr(nSymInd, ARGNUM_ATTR, 1);
     }
+    
 
 }
 
@@ -239,7 +244,6 @@ InsertEntry(id)
     error_msg(REDECLARATION, CONTINUE, id, 0);
     return (0);
   }
-
   if (st_top >= ST_SIZE-1)
     error_msg(ST_OVERFLOW, ABORT, 0 ,0);
 
@@ -286,13 +290,12 @@ LookUp2(classid,id)
     {
       
       int classnest=GetAttr(LookUp(classid),NEST_ATTR);
-      printf("shit\n");
       for (j=i+1; j<st_top; j++ ){
         
         if(GetAttr(j,NEST_ATTR)>classnest){
           
           if(GetAttr(j,NAME_ATTR) == id){
-            return (st[j]);
+            return (j);
           }
         } else {
           break;
@@ -303,7 +306,7 @@ LookUp2(classid,id)
   
   /* id is undefined, push a dummy element onto stack */
   error_msg(UNDECLARATION, CONTINUE, id, 0);
-  //Push(false, id, 0, true);
+  Push(false, id, 0, true);
   return 0;
 }
 
@@ -422,7 +425,7 @@ SetAttr(st_ptr, attr_num, attr_val)
   int st_ptr, attr_num, attr_val;
 
 {
-  int *p, next;
+  int *t, next;
   int i;
   if (i = IsAttr(st_ptr, attr_num))
   {
@@ -434,7 +437,7 @@ SetAttr(st_ptr, attr_num, attr_val)
     return;
   }
 
-  p = &st[st_ptr];
+  t = &st[st_ptr];
   next = st[st_ptr];
 
   /* search the link list for the right insert position */
@@ -442,7 +445,7 @@ SetAttr(st_ptr, attr_num, attr_val)
   {
     if (attrarray[next].attr_num < attr_num)
     {
-      p = &(attrarray[next].next_attr);
+      t = &(attrarray[next].next_attr);
       next = attrarray[next].next_attr;
     }
     else
@@ -456,7 +459,7 @@ SetAttr(st_ptr, attr_num, attr_val)
   attrarray[attr_top].attr_num = attr_num;
   attrarray[attr_top].attr_val = attr_val;
   attrarray[attr_top].next_attr = next;
-  *p = attr_top;
+  *t = attr_top;
 }
 
 
