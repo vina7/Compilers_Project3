@@ -10,3 +10,14 @@ class myTest
 	z:=x+y;
 	}
 }
+class test2
+{
+	declarations
+	enddeclarations
+    method void stuff(){
+     method void stuff2(){
+    myTest.main();
+     }
+    }
+   }
+}

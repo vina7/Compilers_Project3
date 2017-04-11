@@ -470,6 +470,7 @@ typedef struct {
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
 #line 255 "grammer.y"
+//variables keep track of the id names, number of braces, and if a string is being used
 tree GlobalType = NULL; 
 tree ReturnType = NULL;
 int counter=0;
@@ -477,6 +478,8 @@ int ismain=0;
 int isstring=0;
 int counter2=0;
 int counter3 = 0;
+int counter6=0;
+int idnumber6=0;
 int idnumber = 0;
 int idnumber2 = 0;
 int idnumber3=0;
@@ -494,7 +497,7 @@ yyparse();
 // Print out Errors
 yyerror(char *str) { printf("yyerror: %s at line %d\n", str, yyline); }
 #include "lex.yy.c"
-#line 496 "y.tab.c"
+#line 499 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -1003,15 +1006,15 @@ case 76:
 break;
 case 77:
 #line 162 "grammer.y"
-	{yyval.tptr = MakeTree(AssignOp,MakeTree(AssignOp,MakeLeaf(DUMMYNode,0),yystack.l_mark[-2].tptr),yystack.l_mark[0].tptr); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}}
+	{yyval.tptr = MakeTree(AssignOp,MakeTree(AssignOp,MakeLeaf(DUMMYNode,0),yystack.l_mark[-2].tptr),yystack.l_mark[0].tptr); if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);} isstring=0;}
 break;
 case 78:
 #line 166 "grammer.y"
-	{ if(GetAttr(LookUp2(idnumber4,idnumber2),ARGNUM_ATTR)!=0){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-2].tptr,MakeLeaf(DUMMYNode,0)); }
+	{ if(idnumber2!=0){if(GetAttr(LookUp2(idnumber4, idnumber2),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber4),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}} yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-2].tptr,MakeLeaf(DUMMYNode,0)); }
 break;
 case 79:
 #line 167 "grammer.y"
-	{ if(strcmp(getname(idnumber4),"system")!=0 || (strcmp(getname(idnumber2),"println")!=0)){if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber2,0);}} if(GetAttr(LookUp2(idnumber4, idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-3].tptr,yystack.l_mark[-1].tptr); counter5=0; }
+	{ if(strcmp(getname(idnumber6),"system")!=0 || (strcmp(getname(idnumber2),"println")!=0)){if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber6,0);} }  if(idnumber2!=0){ if(GetAttr(LookUp2(idnumber6, idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber6),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}} yyval.tptr = MakeTree(RoutineCallOp,yystack.l_mark[-3].tptr,yystack.l_mark[-1].tptr); counter6=0;  counter5=0; isstring=0; }
 break;
 case 80:
 #line 169 "grammer.y"
@@ -1027,7 +1030,7 @@ case 82:
 break;
 case 83:
 #line 175 "grammer.y"
-	{yyval.tptr=MakeTree(ReturnOp, yystack.l_mark[0].tptr,MakeLeaf(DUMMYNode,0) ); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}}
+	{yyval.tptr=MakeTree(ReturnOp, yystack.l_mark[0].tptr,MakeLeaf(DUMMYNode,0) ); if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0;}
 break;
 case 84:
 #line 179 "grammer.y"
@@ -1039,15 +1042,15 @@ case 85:
 break;
 case 86:
 #line 182 "grammer.y"
-	{yyval.tptr= MakeTree(IfElseOp,MakeLeaf(DUMMYNode,0) ,MakeTree(CommaOp, yystack.l_mark[-1].tptr, yystack.l_mark[0].tptr));if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}}
+	{yyval.tptr= MakeTree(IfElseOp,MakeLeaf(DUMMYNode,0) ,MakeTree(CommaOp, yystack.l_mark[-1].tptr, yystack.l_mark[0].tptr));if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0;}
 break;
 case 87:
 #line 183 "grammer.y"
-	{yyval.tptr=MakeTree(IfElseOp, yystack.l_mark[-4].tptr, MakeTree(CommaOp,yystack.l_mark[-1].tptr,yystack.l_mark[0].tptr)); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}}
+	{yyval.tptr=MakeTree(IfElseOp, yystack.l_mark[-4].tptr, MakeTree(CommaOp,yystack.l_mark[-1].tptr,yystack.l_mark[0].tptr)); if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0;}
 break;
 case 88:
 #line 187 "grammer.y"
-	{yyval.tptr= MakeTree(LoopOp,yystack.l_mark[-1].tptr, yystack.l_mark[0].tptr ); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}}
+	{yyval.tptr= MakeTree(LoopOp,yystack.l_mark[-1].tptr, yystack.l_mark[0].tptr ); if(isstring ==1){error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0; }
 break;
 case 89:
 #line 191 "grammer.y"
@@ -1131,7 +1134,7 @@ case 109:
 break;
 case 110:
 #line 224 "grammer.y"
-	{yyval.tptr=yystack.l_mark[-1].tptr; if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}}
+	{yyval.tptr=yystack.l_mark[-1].tptr; if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);} isstring=0;}
 break;
 case 111:
 #line 225 "grammer.y"
@@ -1163,7 +1166,7 @@ case 117:
 break;
 case 118:
 #line 240 "grammer.y"
-	{idnumber4= yystack.l_mark[0].intg; yyval.tptr = MakeLeaf(IDNode, LookUp(yystack.l_mark[0].intg));}
+	{idnumber4= yystack.l_mark[0].intg; if(counter6==0){idnumber6=yystack.l_mark[0].intg;} yyval.tptr = MakeLeaf(IDNode, LookUp(yystack.l_mark[0].intg));}
 break;
 case 119:
 #line 242 "grammer.y"
@@ -1179,7 +1182,7 @@ case 121:
 break;
 case 122:
 #line 246 "grammer.y"
-	{idnumber2=yystack.l_mark[-1].intg; LookUp(idnumber4); yyval.tptr= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp2(idnumber4,yystack.l_mark[-1].intg)),MakeLeaf(DUMMYNode,0)), yystack.l_mark[0].tptr); SetAttr(LookUp2(idnumber4,yystack.l_mark[-1].intg),DIMEN_ATTR,0);}
+	{counter6=1; idnumber2=yystack.l_mark[-1].intg; LookUp(idnumber4); yyval.tptr= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp2(idnumber4,yystack.l_mark[-1].intg)),MakeLeaf(DUMMYNode,0)), yystack.l_mark[0].tptr); SetAttr(LookUp2(idnumber4,yystack.l_mark[-1].intg),DIMEN_ATTR,0);}
 break;
 case 123:
 #line 248 "grammer.y"
@@ -1193,7 +1196,7 @@ case 125:
 #line 252 "grammer.y"
 	{}
 break;
-#line 1195 "y.tab.c"
+#line 1198 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

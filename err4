@@ -12,6 +12,6 @@ class test1
 {
 	method void main()
 	{
-	myTest.func(2);
+	myTest.func(2,234,'fdsfds');
 	}
 }

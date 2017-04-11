@@ -278,7 +278,8 @@ LookUp(id)
   Push(false, id, 0, true);
   return 0;
 }
-
+/*LookUp2(classid, id): search for the class in the current scope and if it is found it
+looks for the method in the classes scope by checking the nesting levels.*/
 int
 LookUp2(classid,id)
   int classid, id;
@@ -290,6 +291,10 @@ LookUp2(classid,id)
     {
       
       int classnest=GetAttr(LookUp(classid),NEST_ATTR);
+      if(GetAttr(i,NAME_ATTR) == id){
+            return (i);
+          }
+
       for (j=i+1; j<st_top; j++ ){
         
         if(GetAttr(j,NEST_ATTR)>classnest){
@@ -305,6 +310,7 @@ LookUp2(classid,id)
   }
   
   /* id is undefined, push a dummy element onto stack */
+
   error_msg(UNDECLARATION, CONTINUE, id, 0);
   Push(false, id, 0, true);
   return 0;

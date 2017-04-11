@@ -159,12 +159,12 @@ Statements_Op4:
 	
 /*Assignemnt*/
 AssignmentStatement: 
-	Variable ASSGNnum Expression {$$ = MakeTree(AssignOp,MakeTree(AssignOp,MakeLeaf(DUMMYNode,0),$1),$3); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}};
+	Variable ASSGNnum Expression {$$ = MakeTree(AssignOp,MakeTree(AssignOp,MakeLeaf(DUMMYNode,0),$1),$3); if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);} isstring=0;};
 	
 /*MethodCallStatement*/
 MethodCallStatement: 
-	Variable LPARENnum RPARENnum { if(GetAttr(LookUp2(idnumber4,idnumber2),ARGNUM_ATTR)!=0){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} $$ = MakeTree(RoutineCallOp,$1,MakeLeaf(DUMMYNode,0)); } | 
-	Variable LPARENnum Expre RPARENnum { if(strcmp(getname(idnumber4),"system")!=0 || (strcmp(getname(idnumber2),"println")!=0)){if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber2,0);}} if(GetAttr(LookUp2(idnumber4, idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);} $$ = MakeTree(RoutineCallOp,$1,$3); counter5=0; };
+	Variable LPARENnum RPARENnum { if(idnumber2!=0){if(GetAttr(LookUp2(idnumber4, idnumber2),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber4),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}} $$ = MakeTree(RoutineCallOp,$1,MakeLeaf(DUMMYNode,0)); } | 
+	Variable LPARENnum Expre RPARENnum { if(strcmp(getname(idnumber6),"system")!=0 || (strcmp(getname(idnumber2),"println")!=0)){if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber6,0);} }  if(idnumber2!=0){ if(GetAttr(LookUp2(idnumber6, idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber6),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}} $$ = MakeTree(RoutineCallOp,$1,$3); counter6=0;  counter5=0; isstring=0; };
 Expre: 
 	Expression {counter5=1; $$ = MakeTree(CommaOp, $1,MakeLeaf(DUMMYNode,0) ); }|  
 	Expression COMMAnum Expre {counter5=counter5+1; $$ = MakeTree(CommaOp,$1,$3);}; 
@@ -172,19 +172,19 @@ Expre:
 /*Return rule*/
 ReturnStatement: 
 	RETURNnum {$$ = MakeTree(ReturnOp,MakeLeaf(DUMMYNode,0), MakeLeaf(DUMMYNode,0) );} | 
-	RETURNnum Expression {$$=MakeTree(ReturnOp, $2,MakeLeaf(DUMMYNode,0) ); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}};
+	RETURNnum Expression {$$=MakeTree(ReturnOp, $2,MakeLeaf(DUMMYNode,0) ); if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0;};
 	
 /*If rule*/
 IfStatement : 
 	IFState_Op {$$= $1;}| 
 	IFState_Op ELSEnum StatementList {$$ = MakeTree(IfElseOp, $1,$3);};
 IFState_Op : 
-	IFnum Expression StatementList {$$= MakeTree(IfElseOp,MakeLeaf(DUMMYNode,0) ,MakeTree(CommaOp, $2, $3));if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}} | 
-	IFState_Op ELSEnum IFnum Expression StatementList {$$=MakeTree(IfElseOp, $1, MakeTree(CommaOp,$4,$5)); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}}
+	IFnum Expression StatementList {$$= MakeTree(IfElseOp,MakeLeaf(DUMMYNode,0) ,MakeTree(CommaOp, $2, $3));if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0;} | 
+	IFState_Op ELSEnum IFnum Expression StatementList {$$=MakeTree(IfElseOp, $1, MakeTree(CommaOp,$4,$5)); if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0;}
 	
 /*While rule*/
 WhileStatement : 
-	WHILEnum Expression StatementList {$$= MakeTree(LoopOp,$2, $3 ); if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}};
+	WHILEnum Expression StatementList {$$= MakeTree(LoopOp,$2, $3 ); if(isstring ==1){error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}isstring=0; };
 	
 /* Expression rule */
 Expression : 
@@ -221,7 +221,7 @@ Term_op:
 /*Factor rules*/
 Factor : 
 	Factor_op {$$=$1;} | 
-	LPARENnum Expression RPARENnum {$$=$2; if(isstring ==1){isstring=0; error_msg(TYPE_MIS,CONTINUE, idnumber5,0);}} | 
+	LPARENnum Expression RPARENnum {$$=$2; if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber5,0);} isstring=0;} | 
 	NOTnum Factor {$$ = MakeTree(NotOp, MakeLeaf(DUMMYNode,0),$2); } ;
 Factor_op: 
 	UnsignedConstant {$$=$1;} | 
@@ -237,13 +237,13 @@ UnsignedConstant:
 Variable : 
 	Variableid Variable_op {if(IsAttr(LookUp(idnumber4), DIMEN_ATTR)){if(GetAttr(LookUp(idnumber4), DIMEN_ATTR)!=counter3){error_msg(INDX_MIS,CONTINUE, idnumber4,0);} counter3=0;} $$ = MakeTree(VarOp, $1, $2);};
 Variableid:
-	IDnum {idnumber4= $1; $$ = MakeLeaf(IDNode, LookUp($1));};
+	IDnum {idnumber4= $1; if(counter6==0){idnumber6=$1;} $$ = MakeLeaf(IDNode, LookUp($1));};
 Variable_op: 
 	Variable_op2 {$$=$1; } | 
 	epsilon {$$ = MakeLeaf(DUMMYNode,0);};
 Variable_op2 : 
 	LBRACnum Variable_op3 RBRACnum Variable_op {counter3 =counter3+1; $$=MakeTree(SelectOp, $2, $4);} | 
-	DOTnum IDnum Variable_op {idnumber2=$2; LookUp(idnumber4); $$= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp2(idnumber4,$2)),MakeLeaf(DUMMYNode,0)), $3); SetAttr(LookUp2(idnumber4,$2),DIMEN_ATTR,0);};
+	DOTnum IDnum Variable_op {counter6=1; idnumber2=$2; LookUp(idnumber4); $$= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp2(idnumber4,$2)),MakeLeaf(DUMMYNode,0)), $3); SetAttr(LookUp2(idnumber4,$2),DIMEN_ATTR,0);};
 Variable_op3 : 
 	Expression {$$ = MakeTree(IndexOp, $1,MakeLeaf(DUMMYNode,0) );} | 
 	Expression COMMAnum Expression {$$ = MakeTree(IndexOp,$1 ,MakeTree(IndexOp, $3,MakeLeaf(DUMMYNode,0)));} ;
@@ -252,6 +252,7 @@ Variable_op3 :
 epsilon : {};
 
 %%
+//variables keep track of the id names, number of braces, and if a string is being used
 tree GlobalType = NULL; 
 tree ReturnType = NULL;
 int counter=0;
@@ -259,6 +260,8 @@ int ismain=0;
 int isstring=0;
 int counter2=0;
 int counter3 = 0;
+int counter6=0;
+int idnumber6=0;
 int idnumber = 0;
 int idnumber2 = 0;
 int idnumber3=0;

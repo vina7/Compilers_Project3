@@ -2,21 +2,25 @@
 program err1;
 class myTest
 {
+    
 	declarations
 		int x, y;
 		int x;
 	enddeclarations
-	method void main()
-	{
-	/* nothing */	
-	}
-	method int func(int m, n)
+    method int func(int m, n)
 	declarations
 	int m;
     int z;
 	enddeclarations
 	{
-	 System.Println('dsfdsfs');
 	/* nothing */	
 	}
-}
+
+	method void main()
+	{
+     myTest.func(x,y);
+     func('sfjdsjfksd');
+	/* nothing */	
+	}
+
+}	

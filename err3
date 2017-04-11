@@ -9,6 +9,7 @@ class myTest
 
 	method void main()
 	{
+     println('jfsdfkjdshfkjfdsfhsjd');
 	x[1][2]:=3;
 	y[3]:=4;
 	z[5]:=1;

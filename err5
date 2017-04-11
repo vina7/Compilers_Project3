@@ -8,8 +8,9 @@ class myTest
 
 	method void main()
 	{
-	return x;
+	return x+y;
 	}
+   
 }
 
 class test1
