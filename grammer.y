@@ -8,7 +8,7 @@
 %token <intg> ANDnum ASSGNnum DECLARATIONSnum DOTnum ENDDECLARATIONSnum EQUALnum GTnum IDnum INTnum LBRACnum LPARENnum METHODnum NEnum ORnum PROGRAMnum RBRACnum RPARENnum SEMInum VALnum WHILEnum CLASSnum COMMAnum DIVIDEnum ELSEnum EQnum GEnum ICONSTnum IFnum LBRACEnum LEnum LTnum MINUSnum NOTnum PLUSnum RBRACEnum RETURNnum SCONSTnum TIMESnum VOIDnum ERRORnum STRERRORnum COMMERRORnum IDERRORnum BACKSLASHnum EOFnum			
 %type <tptr> Variable Expre MethodCallStatement Expression AssignmentStatement SimpleExpression WhileStatement IfStatement Statements_Op4 Statements_Op3  ReturnStatement Statementsop Statement StatementList AssignmentStatement Statements_Op MethodCallStatement Statements_Op2 IFState_Op Term Simple_op Simple_op2 UnsignedConstant Term_op Factor Factor_op Variable Variable_op2 Variable_op3 Variable_op ClassBodyC FieldDeclC FieldDeclE
 Program ProgramB ClassDecl ClassBody ClassBodyB Decls DeclsB FieldDecl VariableDeclId VariableDeclIdB VariableInitializer ArrayCreationExpression ArrayCreationExpressionB MethodDecl FormalParameterList FormalParameterListC Block Type TypeB ArrayInitializer ArrayInitializerB epsilon 
-FieldDeclD MethodHelp ClassName Variableid ProgramC
+FieldDeclD MethodHelp ClassName Variableid ProgramC MethodTemp
 %% /* yacc specification */
 
 // First Half of Grammar - Ryan //
@@ -163,8 +163,10 @@ AssignmentStatement:
 	
 /*MethodCallStatement*/
 MethodCallStatement: 
-	Variable LPARENnum RPARENnum { if(idnumber2!=0){if(GetAttr(LookUp2(idnumber4, idnumber2),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber4),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}} $$ = MakeTree(RoutineCallOp,$1,MakeLeaf(DUMMYNode,0)); } | 
-	Variable LPARENnum Expre RPARENnum { if(strcmp(getname(idnumber6),"system")!=0 || (strcmp(getname(idnumber2),"println")!=0)){if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber6,0);} }  if(idnumber2!=0){ if(GetAttr(LookUp2(idnumber6, idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber6),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}} $$ = MakeTree(RoutineCallOp,$1,$3); counter6=0;  counter5=0; isstring=0; };
+	Variable LPARENnum RPARENnum {  if(counter7==1){if(GetAttr(LookUp2(idnumber4, idnumber2),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber4),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}} $$ = MakeTree(RoutineCallOp,$1,MakeLeaf(DUMMYNode,0)); counter7=0; counter6=0;} | 
+	Variable LPARENnum MethodTemp Expre RPARENnum { if(strcmp(getname(idnumber6),"system")!=0 || (strcmp(getname(idnumber2),"println")!=0)){if(isstring ==1){ error_msg(TYPE_MIS,CONTINUE, idnumber6,0);} } if(counter7==1){ if(GetAttr(LookUp2(idnumber6, idnumber2),ARGNUM_ATTR)!=counter5){error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber2,0);}}else {if(GetAttr(LookUp(idnumber6),ARGNUM_ATTR)!=counter5){ error_msg(ARGUMENTS_NUM2,CONTINUE,idnumber6,0);}} $$ = MakeTree(RoutineCallOp,$1,$4); counter6=0; counter7=0;  counter5=0; isstring=0; };
+MethodTemp:
+	epsilon {counter6=1;}
 Expre: 
 	Expression {counter5=1; $$ = MakeTree(CommaOp, $1,MakeLeaf(DUMMYNode,0) ); }|  
 	Expression COMMAnum Expre {counter5=counter5+1; $$ = MakeTree(CommaOp,$1,$3);}; 
@@ -237,13 +239,13 @@ UnsignedConstant:
 Variable : 
 	Variableid Variable_op {if(IsAttr(LookUp(idnumber4), DIMEN_ATTR)){if(GetAttr(LookUp(idnumber4), DIMEN_ATTR)!=counter3){error_msg(INDX_MIS,CONTINUE, idnumber4,0);} counter3=0;} $$ = MakeTree(VarOp, $1, $2);};
 Variableid:
-	IDnum {idnumber4= $1; if(counter6==0){idnumber6=$1;} $$ = MakeLeaf(IDNode, LookUp($1));};
+	IDnum {idnumber4= $1;  if(counter6==0){idnumber6=$1;} $$ = MakeLeaf(IDNode, LookUp($1));};
 Variable_op: 
 	Variable_op2 {$$=$1; } | 
 	epsilon {$$ = MakeLeaf(DUMMYNode,0);};
 Variable_op2 : 
 	LBRACnum Variable_op3 RBRACnum Variable_op {counter3 =counter3+1; $$=MakeTree(SelectOp, $2, $4);} | 
-	DOTnum IDnum Variable_op {counter6=1; idnumber2=$2; LookUp(idnumber4); $$= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp2(idnumber4,$2)),MakeLeaf(DUMMYNode,0)), $3); SetAttr(LookUp2(idnumber4,$2),DIMEN_ATTR,0);};
+	DOTnum IDnum Variable_op {counter6=1; counter7=1; idnumber2=$2; LookUp(idnumber6); $$= MakeTree(SelectOp,MakeTree(FieldOp,MakeLeaf(IDNode, LookUp2(idnumber6,$2)),MakeLeaf(DUMMYNode,0)), $3); SetAttr(LookUp2(idnumber6,$2),DIMEN_ATTR,0);};
 Variable_op3 : 
 	Expression {$$ = MakeTree(IndexOp, $1,MakeLeaf(DUMMYNode,0) );} | 
 	Expression COMMAnum Expression {$$ = MakeTree(IndexOp,$1 ,MakeTree(IndexOp, $3,MakeLeaf(DUMMYNode,0)));} ;
@@ -268,6 +270,7 @@ int idnumber3=0;
 int idnumber4=0;
 int idnumber5=0;
 int counter4=0;
+int counter7=0;
 int counter5=0;
 int yycolumn, yyline;
 FILE *treelst;

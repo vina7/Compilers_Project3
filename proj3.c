@@ -294,9 +294,8 @@ LookUp2(classid,id)
       if(GetAttr(i,NAME_ATTR) == id){
             return (i);
           }
-
+       
       for (j=i+1; j<st_top; j++ ){
-        
         if(GetAttr(j,NEST_ATTR)>classnest){
           
           if(GetAttr(j,NAME_ATTR) == id){

@@ -7,17 +7,18 @@ class myTest
 	enddeclarations
 	method void main()
 	{
-	z:=x+y;
+	x:=x+y;
 	}
 }
 class test2
 {
 	declarations
 	enddeclarations
-    method void stuff(){
-     method void stuff2(){
+    method void stuff(int x,y){
     myTest.main();
      }
-    }
-   }
-}
+     method int morestuff(){
+      stuff(1,1);
+     }
+    
+ }
