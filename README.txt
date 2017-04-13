@@ -3,7 +3,17 @@ Authors: Ryan Yoder and Vinayak Nesarikar
 Instructions:
 	1. make
 	2. ./parser < filename
-
+The rules that were appended for Semantic checking:
+	Variable
+	Factor
+	while statement
+	if statement
+	return statement
+	method call
+	assignment statement
+	method declarations
+	class declarations
+	
 Project completed in group sessions; all work done collaboratively.
 
 Semantic checks run as intended, specified below:

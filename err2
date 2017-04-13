@@ -16,9 +16,13 @@ class test2
 	enddeclarations
     method void stuff(int x,y){
     myTest.main();
+
      }
      method int morestuff(){
       stuff(1,1);
+      x:=y;
      }
-    
+    method void stuff(int x,y){
+
+    }
  }

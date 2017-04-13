@@ -21,7 +21,7 @@ Semantic checks run as intended, specified below:
 	- Semantic errors print out and allow the program to continue so that:
 		 - all semantic errors within the program are identified 
 		 - the symbol table and tree are still printed out
-		 - some semantic errors may cause segmentation faults but still prints out all the semantic errors
+		 - some semantic errors may cause a segmentation fault (because of the tree and symbol table creation) but still prints out all the semantic errors
 		 As allowed by professor Zhang
 	- Program name and attributes print out in the symbol table, as Zhang said this was optional
 	- The program compiles with two warnings, both of which are within functions that were provided for us by professor Zhang.
